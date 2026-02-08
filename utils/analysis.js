@@ -1,16 +1,6 @@
 function toNumber(value) {
-  if (value === null || value === undefined) {
-    return null;
-  }
-  const trimmed = String(value).trim();
-  if (trimmed === "") {
-    return null;
-  }
-  const num = Number(trimmed);
-  if (!Number.isFinite(num) || num === 0) {
-    return null;
-  }
-  return num;
+  const num = Number(String(value).trim());
+  return Number.isFinite(num) ? num : null;
 }
 
 export function analyzeData(rows, config) {
@@ -42,44 +32,19 @@ export function analyzeData(rows, config) {
     validControlByGene.set(gene, []);
   });
 
-  const validRows = [];
   rows.forEach((row) => {
     const sampleId = String(row[sampleColumn] ?? "").trim();
     const group = String(row[groupColumn] ?? "").trim();
-    const hkValue = toNumber(row[housekeepingColumn]);
-    const targetValues = targetColumns.map((gene) => ({
-      gene,
-      value: toNumber(row[gene]),
-    }));
-
-    if (!sampleId || !group) {
-      targetValues.forEach(({ gene }) => {
-        summaryByGene.get(gene).discarded += 1;
-      });
-      return;
-    }
-
-    targetValues.forEach(({ gene, value }) => {
-      if (hkValue === null || value === null) {
-        summaryByGene.get(gene).discarded += 1;
-      }
-    });
-
-    validRows.push({
-      row,
-      sampleId,
-      group,
-      hkValue,
-      targetValues,
-    });
-
     if (group) {
       groups.add(group);
     }
 
     targetColumns.forEach((gene) => {
-      const targetValue = targetValues.find((item) => item.gene === gene).value;
-      if (hkValue === null || targetValue === null) {
+      const hkValue = toNumber(row[housekeepingColumn]);
+      const targetValue = toNumber(row[gene]);
+
+      if (!sampleId || !group || hkValue === null || targetValue === null) {
+        summaryByGene.get(gene).discarded += 1;
         return;
       }
 
@@ -118,10 +83,15 @@ export function analyzeData(rows, config) {
     };
   }
 
-  validRows.forEach(({ sampleId, group, hkValue, targetValues }) => {
+  rows.forEach((row) => {
+    const sampleId = String(row[sampleColumn] ?? "").trim();
+    const group = String(row[groupColumn] ?? "").trim();
+
     targetColumns.forEach((gene) => {
-      const targetValue = targetValues.find((item) => item.gene === gene).value;
-      if (hkValue === null || targetValue === null) {
+      const hkValue = toNumber(row[housekeepingColumn]);
+      const targetValue = toNumber(row[gene]);
+
+      if (!sampleId || !group || hkValue === null || targetValue === null) {
         return;
       }
 

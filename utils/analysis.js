@@ -1,17 +1,6 @@
 function toNumber(value) {
-  if (value === null || value === undefined) {
-    return null;
-  }
-  const trimmed = String(value).trim();
-  if (trimmed === "") {
-    return null;
-  }
-  const normalized = trimmed.replace(",", ".");
-  const num = Number(normalized);
-  if (!Number.isFinite(num) || num <= 0) {
-    return null;
-  }
-  return num;
+  const num = Number(String(value).trim());
+  return Number.isFinite(num) ? num : null;
 }
 
 export function analyzeData(rows, config) {
@@ -42,32 +31,29 @@ export function analyzeData(rows, config) {
   targetColumns.forEach((gene) => {
     validControlByGene.set(gene, []);
   });
-  const validRowsByGene = new Map();
-  targetColumns.forEach((gene) => {
-    validRowsByGene.set(gene, []);
-  });
 
   rows.forEach((row) => {
     const sampleId = String(row[sampleColumn] ?? "").trim();
     const group = String(row[groupColumn] ?? "").trim();
-    const hkValue = toNumber(row[housekeepingColumn]);
     if (group) {
       groups.add(group);
     }
 
     targetColumns.forEach((gene) => {
+      const hkValue = toNumber(row[housekeepingColumn]);
       const targetValue = toNumber(row[gene]);
-      if (!sampleId || !group || hkValue === null || targetValue === null) {
+
+      if (
+        !sampleId ||
+        !group ||
+        hkValue === null ||
+        targetValue === null ||
+        hkValue <= 0 ||
+        targetValue <= 0
+      ) {
         summaryByGene.get(gene).discarded += 1;
         return;
       }
-
-      validRowsByGene.get(gene).push({
-        sampleId,
-        group,
-        hkValue,
-        targetValue,
-      });
 
       if (group === controlGroup) {
         validControlByGene.get(gene).push({ hkValue, targetValue });
@@ -104,11 +90,26 @@ export function analyzeData(rows, config) {
     };
   }
 
-  targetColumns.forEach((gene) => {
-    const rowsForGene = validRowsByGene.get(gene);
-    const { hkMean, targetMean } = controlMeans.get(gene);
+  rows.forEach((row) => {
+    const sampleId = String(row[sampleColumn] ?? "").trim();
+    const group = String(row[groupColumn] ?? "").trim();
 
-    rowsForGene.forEach(({ sampleId, group, hkValue, targetValue }) => {
+    targetColumns.forEach((gene) => {
+      const hkValue = toNumber(row[housekeepingColumn]);
+      const targetValue = toNumber(row[gene]);
+
+      if (
+        !sampleId ||
+        !group ||
+        hkValue === null ||
+        targetValue === null ||
+        hkValue <= 0 ||
+        targetValue <= 0
+      ) {
+        return;
+      }
+
+      const { hkMean, targetMean } = controlMeans.get(gene);
       const deltaCtHousekeeping = hkValue - hkMean;
       const deltaCtTarget = targetValue - targetMean;
       const hkExp = Math.pow(2, deltaCtHousekeeping);

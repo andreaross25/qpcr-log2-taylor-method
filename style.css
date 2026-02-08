@@ -61,25 +61,6 @@ button {
   background: #fff;
 }
 
-.target-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 8px 16px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #c7ccd8;
-  background: #fff;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.target-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
-}
-
 button {
   cursor: pointer;
   background: #3a6ff7;

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard qPCR ΔΔCt (Taylor)</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Dashboard qPCR ΔΔCt (método tipo Taylor)</h1>
+    <p>
+      Cargue un archivo (.xlsx o .csv), seleccione columnas y ejecute el análisis
+      de expresión normalizada y log2.
+    </p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>1) Cargar archivo</h2>
+      <div class="form-row">
+        <input type="file" id="file-input" accept=".xlsx,.csv" />
+        <span id="file-status" class="status">Sin archivo cargado.</span>
+      </div>
+      <div class="form-row hidden" id="sheet-row">
+        <label for="sheet-select">Hoja:</label>
+        <select id="sheet-select"></select>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2) Mapear columnas</h2>
+      <div class="grid">
+        <label>
+          Identificador de muestra
+          <select id="sample-column"></select>
+        </label>
+        <label>
+          Grupo
+          <select id="group-column"></select>
+        </label>
+        <label>
+          Ct housekeeping
+          <select id="hk-column"></select>
+        </label>
+      </div>
+      <div class="form-row">
+        <label>
+          Ct genes target (uno o más)
+          <select id="target-columns" multiple size="6"></select>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3) Configurar análisis</h2>
+      <div class="grid">
+        <label>
+          Grupo control
+          <select id="control-group"></select>
+        </label>
+        <label>
+          Tipo de gráfico
+          <select id="plot-type">
+            <option value="box">Boxplot</option>
+            <option value="scatter">Scatter (jitter)</option>
+          </select>
+        </label>
+        <label>
+          Gen para visualizar
+          <select id="plot-gene"></select>
+        </label>
+      </div>
+      <div class="form-row">
+        <button id="run-analysis">Ejecutar análisis</button>
+        <span id="analysis-status" class="status"></span>
+      </div>
+      <div id="alert-box" class="alert hidden"></div>
+    </section>
+
+    <section class="card">
+      <h2>4) Resultados</h2>
+      <div class="summary" id="summary"></div>
+      <div id="plot" class="plot"></div>
+      <div class="download-row">
+        <button id="download-long">Descargar tabla intermedia</button>
+        <button id="download-wide">Descargar tabla final</button>
+      </div>
+      <div class="table-preview">
+        <h3>Vista previa (tabla intermedia)</h3>
+        <table id="preview-table"></table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <small>
+      Frontend-only · Compatible con GitHub Pages · Datos procesados localmente.
+    </small>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

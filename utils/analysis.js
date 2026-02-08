@@ -110,8 +110,8 @@ export function analyzeData(rows, config) {
       }
 
       const { hkMean, targetMean } = controlMeans.get(gene);
-      const deltaCtHousekeeping = hkValue - hkMean;
-      const deltaCtTarget = targetValue - targetMean;
+      const deltaCtHousekeeping = hkMean - hkValue;
+      const deltaCtTarget = targetMean - targetValue;
       const hkExp = Math.pow(2, deltaCtHousekeeping);
       const targetExp = Math.pow(2, deltaCtTarget);
       const normalizedExpression = targetExp / hkExp;

@@ -43,7 +43,14 @@ export function analyzeData(rows, config) {
       const hkValue = toNumber(row[housekeepingColumn]);
       const targetValue = toNumber(row[gene]);
 
-      if (!sampleId || !group || hkValue === null || targetValue === null) {
+      if (
+        !sampleId ||
+        !group ||
+        hkValue === null ||
+        targetValue === null ||
+        hkValue <= 0 ||
+        targetValue <= 0
+      ) {
         summaryByGene.get(gene).discarded += 1;
         return;
       }
@@ -91,7 +98,14 @@ export function analyzeData(rows, config) {
       const hkValue = toNumber(row[housekeepingColumn]);
       const targetValue = toNumber(row[gene]);
 
-      if (!sampleId || !group || hkValue === null || targetValue === null) {
+      if (
+        !sampleId ||
+        !group ||
+        hkValue === null ||
+        targetValue === null ||
+        hkValue <= 0 ||
+        targetValue <= 0
+      ) {
         return;
       }
 

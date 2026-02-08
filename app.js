@@ -63,26 +63,14 @@ function fillSelect(select, options, placeholder = "Seleccione") {
   });
 }
 
-function fillTargetList(options) {
-  targetSelect.innerHTML = "";
+function fillMultiSelect(select, options) {
+  select.innerHTML = "";
   options.forEach((item) => {
-    const wrapper = document.createElement("label");
-    wrapper.className = "target-option";
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = item;
-    wrapper.appendChild(checkbox);
-    const text = document.createElement("span");
-    text.textContent = item;
-    wrapper.appendChild(text);
-    targetSelect.appendChild(wrapper);
+    const option = document.createElement("option");
+    option.value = item;
+    option.textContent = item;
+    select.appendChild(option);
   });
-}
-
-function getSelectedTargets() {
-  return Array.from(targetSelect.querySelectorAll("input:checked")).map(
-    (input) => input.value
-  );
 }
 
 function loadSheet(sheetName) {
@@ -92,7 +80,7 @@ function loadSheet(sheetName) {
   fillSelect(sampleSelect, headers);
   fillSelect(groupSelect, headers);
   fillSelect(hkSelect, headers);
-  fillTargetList(headers);
+  fillMultiSelect(targetSelect, headers);
   fillSelect(controlGroupSelect, []);
   plotGeneSelect.innerHTML = "";
   summaryContainer.innerHTML = "";
@@ -107,17 +95,6 @@ function updateControlGroups() {
   }
   const groups = uniqueValues(currentRows, groupSelect.value);
   fillSelect(controlGroupSelect, groups, "Seleccione un grupo");
-}
-
-function updateTargetList() {
-  const excluded = new Set([
-    sampleSelect.value,
-    groupSelect.value,
-    hkSelect.value,
-  ]);
-  const headers = currentRows.length ? Object.keys(currentRows[0]) : [];
-  const targets = headers.filter((header) => !excluded.has(header));
-  fillTargetList(targets);
 }
 
 fileInput.addEventListener("change", async (event) => {
@@ -155,15 +132,6 @@ sheetSelect.addEventListener("change", (event) => {
 
 groupSelect.addEventListener("change", () => {
   updateControlGroups();
-  updateTargetList();
-});
-
-sampleSelect.addEventListener("change", () => {
-  updateTargetList();
-});
-
-hkSelect.addEventListener("change", () => {
-  updateTargetList();
 });
 
 runButton.addEventListener("click", () => {
@@ -176,7 +144,9 @@ runButton.addEventListener("click", () => {
   const sampleColumn = sampleSelect.value;
   const groupColumn = groupSelect.value;
   const housekeepingColumn = hkSelect.value;
-  const targetColumns = getSelectedTargets();
+  const targetColumns = Array.from(targetSelect.selectedOptions).map(
+    (option) => option.value
+  );
   const controlGroup = controlGroupSelect.value;
 
   if (!sampleColumn || !groupColumn || !housekeepingColumn) {

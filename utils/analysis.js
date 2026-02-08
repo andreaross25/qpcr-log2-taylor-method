@@ -1,12 +1,5 @@
 function toNumber(value) {
-  if (value === null || value === undefined) {
-    return null;
-  }
-  const trimmed = String(value).trim();
-  if (trimmed === "") {
-    return null;
-  }
-  const num = Number(trimmed);
+  const num = Number(String(value).trim());
   return Number.isFinite(num) ? num : null;
 }
 

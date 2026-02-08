@@ -1,0 +1,168 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+  background: #f6f7fb;
+  color: #1f2532;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header,
+main,
+footer {
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+}
+
+header {
+  padding: 32px 0 16px;
+}
+
+h1 {
+  margin-bottom: 8px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(31, 37, 50, 0.08);
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-bottom: 16px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+select,
+input[type="file"],
+button {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #c7ccd8;
+  background: #fff;
+}
+
+.target-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px 16px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #c7ccd8;
+  background: #fff;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.target-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+}
+
+button {
+  cursor: pointer;
+  background: #3a6ff7;
+  color: #fff;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(58, 111, 247, 0.35);
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.status {
+  font-size: 0.9rem;
+  color: #55607a;
+}
+
+.alert {
+  margin-top: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #fff4e5;
+  border: 1px solid #ffb961;
+  color: #7a4b00;
+}
+
+.hidden {
+  display: none;
+}
+
+.plot {
+  width: 100%;
+  min-height: 360px;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-card {
+  background: #f4f6ff;
+  border-radius: 10px;
+  padding: 12px 16px;
+  border: 1px solid #d7defa;
+}
+
+.download-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0 20px;
+}
+
+.table-preview {
+  overflow-x: auto;
+}
+
+#preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+#preview-table th,
+#preview-table td {
+  border: 1px solid #d4d9e4;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+footer {
+  padding: 24px 0 40px;
+  text-align: center;
+  color: #6c7487;
+}
